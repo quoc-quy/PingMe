@@ -44,7 +44,7 @@ export const signUp = async (req, res) => {
     }
 };
 
-export const signIp = async (req, res) => {
+export const signIn = async (req, res) => {
     try {
         // Lấy inputs
         const { username, password } = req.body;
@@ -93,6 +93,26 @@ export const signIp = async (req, res) => {
             .json({ message: `User ${user.displayName} đã logeed in!`, accessToken });
     } catch (error) {
         console.error("lỗi khi gọi signIn: ", error);
+        return res.status(500).json({ message: "Lỗi hệ thống" });
+    }
+};
+
+export const signOut = async (req, res) => {
+    try {
+        // lấy refreshToken từ cookie
+        const token = req.cookies?.refreshToken;
+
+        if (token) {
+            // xóa refreshToken trong Session
+            await Session.deleteOne({ refreshToken: token });
+
+            // xóa cookie
+            req.clearCookie("refreshToken");
+        }
+
+        return res.sendStatus(204);
+    } catch (error) {
+        console.error("lỗi khi gọi signOut: ", error);
         return res.status(500).json({ message: "Lỗi hệ thống" });
     }
 };
