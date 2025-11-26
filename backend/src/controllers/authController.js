@@ -107,7 +107,7 @@ export const signOut = async (req, res) => {
             await Session.deleteOne({ refreshToken: token });
 
             // xóa cookie
-            req.clearCookie("refreshToken");
+            res.clearCookie("refreshToken");
         }
 
         return res.sendStatus(204);
