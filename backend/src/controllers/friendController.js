@@ -1,7 +1,6 @@
 import Friend from "../models/Friend.js";
 import User from "../models/User.js";
 import FriendRequest from "../models/FriendRequest.js";
-import { Promise } from "mongoose";
 
 export const sendFriendRequest = async (req, res) => {
     try {
@@ -47,7 +46,7 @@ export const sendFriendRequest = async (req, res) => {
 
         const request = await FriendRequest.create({ from, to, message });
 
-        return res.status(200).json({ message: "Gửi lời mời kết bạn thành công ", request });
+        return res.status(201).json({ message: "Gửi lời mời kết bạn thành công ", request });
     } catch (error) {
         console.error("Lỗi khi gửi yêu cầu kết bạn: ", error);
         return res.status(500).json({ message: "Lỗi hệ thống" });
@@ -64,7 +63,7 @@ export const acceptFriendRequest = async (req, res) => {
             return res.status(404).json({ message: "Không tìm thấy lời mời kết bạn" });
         }
 
-        if (request.toString() !== userId) {
+        if (request.to.toString() !== userId.toString()) {
             return res.status(403).json({ message: "Bạn không có quyền chấp nhận lời mời này" });
         }
 
@@ -101,7 +100,7 @@ export const declineFriendRequest = async (req, res) => {
             return res.status(404).json({ message: "Không tìm thấy lời mời kết bạn" });
         }
 
-        if (request.toString() !== userId) {
+        if (request.to.toString() !== userId.toString()) {
             return res.status(403).json({ message: "Bạn không có quyền từ chối lời mời này" });
         }
         await FriendRequest.findByIdAndDelete(requestId);
@@ -115,6 +114,31 @@ export const declineFriendRequest = async (req, res) => {
 
 export const getAllFriends = async (req, res) => {
     try {
+        const userId = req.user._id;
+
+        const friendships = await Friend.find({
+            $or: [
+                {
+                    userA: userId,
+                },
+                {
+                    userB: userId,
+                },
+            ],
+        })
+            .populate("userA", "_id displayName avatarUrl")
+            .populate("userB", "_id displayName avatarUrl")
+            .lean();
+
+        if (!friendships.length) {
+            return res.status(200).json({ friends: [] });
+        }
+
+        const friends = friendships.map((f) =>
+            f.userA._id.toString() === userId.toString() ? f.userB : f.userA
+        );
+
+        return res.status(200).json({ friends });
     } catch (error) {
         console.error("Lỗi khi lấy danh sách bạn bè: ", error);
         return res.status(500).json({ message: "Lỗi hệ thống" });
