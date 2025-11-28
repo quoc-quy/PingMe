@@ -61,7 +61,7 @@ export const acceptFriendRequest = async (req, res) => {
         const request = await FriendRequest.findById(requestId);
 
         if (!request) {
-            return res.status(404).json({ message: "Người tìm thấy lời mời kết bạn" });
+            return res.status(404).json({ message: "Không tìm thấy lời mời kết bạn" });
         }
 
         if (request.toString() !== userId) {
@@ -93,6 +93,20 @@ export const acceptFriendRequest = async (req, res) => {
 
 export const declineFriendRequest = async (req, res) => {
     try {
+        const { requestId } = req.params;
+        const userId = req.user._id;
+        const request = await FriendRequest.findById(requestId);
+
+        if (!request) {
+            return res.status(404).json({ message: "Không tìm thấy lời mời kết bạn" });
+        }
+
+        if (request.toString() !== userId) {
+            return res.status(403).json({ message: "Bạn không có quyền từ chối lời mời này" });
+        }
+        await FriendRequest.findByIdAndDelete(requestId);
+
+        return res.sendStatus(204);
     } catch (error) {
         console.error("Lỗi khi từ chối lời mời kết bạn: ", error);
         return res.status(500).json({ message: "Lỗi hệ thống" });
