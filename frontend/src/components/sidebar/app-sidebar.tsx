@@ -5,6 +5,10 @@ import {
     Sidebar,
     SidebarContent,
     SidebarFooter,
+    SidebarGroup,
+    SidebarGroupAction,
+    SidebarGroupContent,
+    SidebarGroupLabel,
     SidebarHeader,
     SidebarMenu,
     SidebarMenuButton,
@@ -12,6 +16,11 @@ import {
 } from "@/components/ui/sidebar";
 import { Moon, Sun } from "lucide-react";
 import { Switch } from "../ui/switch";
+import CreateNewChat from "../chat/CreateNewChat";
+import NewGroupChatModel from "../chat/NewGroupChatModel";
+import GroupChatList from "../chat/GroupChatList";
+import AddFriendModal from "../chat/AddFriendModal";
+import DirectMessageList from "../chat/DirectMessageList";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     return (
@@ -41,7 +50,38 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             </SidebarHeader>
 
             {/* Cpontent */}
-            <SidebarContent></SidebarContent>
+            <SidebarContent>
+                {/* New Chat */}
+                <SidebarGroup>
+                    <SidebarGroupContent>
+                        <CreateNewChat />
+                    </SidebarGroupContent>
+                </SidebarGroup>
+
+                {/* Group Chat */}
+                <SidebarGroup>
+                    <SidebarGroupLabel className="uppercase">Nhóm chat</SidebarGroupLabel>
+                    <SidebarGroupAction className="cursor-pointer" title="Tạo Nhóm">
+                        <NewGroupChatModel />
+                    </SidebarGroupAction>
+
+                    <SidebarGroupContent>
+                        <GroupChatList />
+                    </SidebarGroupContent>
+                </SidebarGroup>
+
+                {/* Direct Message */}
+                <SidebarGroup>
+                    <SidebarGroupLabel className="uppercase">Bạn bè</SidebarGroupLabel>
+                    <SidebarGroupAction className="cursor-pointer" title="Kết bạn">
+                        <AddFriendModal />
+                    </SidebarGroupAction>
+
+                    <SidebarGroupContent>
+                        <DirectMessageList />
+                    </SidebarGroupContent>
+                </SidebarGroup>
+            </SidebarContent>
 
             {/* Footer */}
             <SidebarFooter>{/* <NavUser user={data.user} /> */}</SidebarFooter>
