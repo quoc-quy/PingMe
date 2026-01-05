@@ -47,6 +47,7 @@ export const useAuthStore = create<AuthState>()(
                     get().setAccessToken(accessToken);
 
                     await get().fetchMe();
+                    useChatStore.getState().fetchConversations();
 
                     toast.success("Chào mừng bạn trở lại với PingMe 🎉🎉🎉");
                 } catch (error) {
