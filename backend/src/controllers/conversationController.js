@@ -66,7 +66,22 @@ export const createConversation = async (req, res) => {
             { path: "lastMessage.senderId", select: "displayName avatarUrl" },
         ]);
 
-        return res.status(201).json({ conversation });
+        const participants = (conversation.participants || []).map((p) => ({
+            _id: p.userId?._id,
+            displayName: p.userId?.displayName,
+            avatarUrl: p.userId?.avatarUrl ?? null,
+            joinedAt: p.joinedAt,
+        }));
+
+        const formatted = { ...conversation.toObject(), participants };
+
+        if (type === "group") {
+            memberIds.forEach((userId) => {
+                io.to(userId).emit("new-group", formatted);
+            });
+        }
+
+        return res.status(201).json({ conversation: formatted });
     } catch (error) {
         console.error("Lỗi khi tạo conversation", error);
         return res.status(500).json({ message: "Lỗi hệ thống" });
@@ -123,7 +138,7 @@ export const getMessages = async (req, res) => {
         const query = { conversationId };
 
         if (cursor) {
-            query.createAt = { $lt: new Date(cursor) };
+            query.createdAt = { $lt: new Date(cursor) };
         }
 
         let messages = await Message.find(query)
@@ -134,7 +149,7 @@ export const getMessages = async (req, res) => {
 
         if (messages.length > Number(limit)) {
             const nextMessage = messages[messages.length - 1];
-            nextCursor = nextMessage.createdAt.toISOtring();
+            nextCursor = nextMessage.createdAt.toISOString();
             messages.pop();
         }
 
@@ -147,5 +162,19 @@ export const getMessages = async (req, res) => {
     } catch (error) {
         console.error("Lỗi xảy ra khi lấy messages", error);
         return res.status(500).json({ message: "Lỗi hệ thống" });
+    }
+};
+
+export const getUserConversationsForSocketIO = async (userId) => {
+    try {
+        const conversations = await Conversation.find(
+            { "participants.userId": userId },
+            { _id: 1 }
+        );
+
+        return conversations.map((c) => c._id.toString());
+    } catch (error) {
+        console.error("Lỗi khi fetch conversations: ", error);
+        return [];
     }
 };

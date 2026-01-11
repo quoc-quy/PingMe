@@ -1,10 +1,8 @@
 import { useChatStore } from "@/stores/useChatStore";
 import type { Conversation } from "@/types/chat";
-import React, { use } from "react";
 import { SidebarTrigger } from "../ui/sidebar";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { Separator } from "../ui/separator";
-import { User } from "lucide-react";
 import UserAvatar from "./UserAvatar";
 import StatusBadge from "./StatusBadge";
 import GroupChatAvatar from "./GroupChatAvatar";

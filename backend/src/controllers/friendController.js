@@ -126,8 +126,8 @@ export const getAllFriends = async (req, res) => {
                 },
             ],
         })
-            .populate("userA", "_id displayName avatarUrl")
-            .populate("userB", "_id displayName avatarUrl")
+            .populate("userA", "_id displayName avatarUrl username")
+            .populate("userB", "_id displayName avatarUrl username")
             .lean();
 
         if (!friendships.length) {
@@ -140,7 +140,7 @@ export const getAllFriends = async (req, res) => {
 
         return res.status(200).json({ friends });
     } catch (error) {
-        console.error("Lỗi khi lấy danh sách bạn bè: ", error);
+        console.error("Lỗi khi lấy danh sách bạn bè", error);
         return res.status(500).json({ message: "Lỗi hệ thống" });
     }
 };

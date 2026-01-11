@@ -1,10 +1,9 @@
-import { Badge } from "lucide-react";
-import React from "react";
+import { Badge } from "../ui/badge";
 
 const UnreadCountBadge = ({ unreadCount }: { unreadCount: number }) => {
     return (
         <div className="pulse-ring absolute z-20 -top-1 -right-1">
-            <Badge className="size-5 text-xs flex items-center justify-center p-0 bg-gradient-chat border border-background">
+            <Badge className="size-5 text-xs bg-gradient-chat border border-background text-white flex items-center justify-center">
                 {unreadCount > 9 ? "9+" : unreadCount}
             </Badge>
         </div>
