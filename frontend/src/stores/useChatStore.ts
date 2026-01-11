@@ -11,8 +11,9 @@ export const useChatStore = create<ChatState>()(
             conversations: [],
             messages: {},
             activeConversationId: null,
-            convoLoading: false, //convo loading
-            messageLoading: false, // message loading
+            convoLoading: false, // convo loading
+            messageLoading: false,
+            loading: false,
 
             setActiveConversation: (id) => set({ activeConversationId: id }),
             reset: () => {
@@ -31,7 +32,7 @@ export const useChatStore = create<ChatState>()(
 
                     set({ conversations, convoLoading: false });
                 } catch (error) {
-                    console.error("Lỗi xảy ra khi fetchConversations: ", error);
+                    console.error("Lỗi xảy ra khi fetchConversations:", error);
                     set({ convoLoading: false });
                 }
             },
