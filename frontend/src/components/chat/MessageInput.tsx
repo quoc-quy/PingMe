@@ -4,6 +4,8 @@ import { useState } from "react";
 import { Button } from "../ui/button";
 import { ImagePlus, Send } from "lucide-react";
 import { Input } from "../ui/input";
+import EmojiPicker from "./EmojiPicker";
+import { emoji } from "zod";
 
 const MessageInput = ({ selectedConvo }: { selectedConvo: Conversation }) => {
     const { user } = useAuthStore();
@@ -22,16 +24,20 @@ const MessageInput = ({ selectedConvo }: { selectedConvo: Conversation }) => {
                     value={value}
                     onChange={(e) => setValue(e.target.value)}
                     placeholder="Soạn tin nhắn..."
-                    className="pr-20 h-9 bg-white border-border/50 focus:border-primary/50 transition-smooth resize-none text-black"
+                    className="pr-20 h-9  border-border/50 focus:border-primary/50 transition-smooth resize-none"
                 ></Input>
-                <div className="absolute right-2 top-1/2 transform translate-y-1/2 flex items-center gap-1">
+                <div className="absolute right-2 top-1/2 transform -translate-y-1/2 flex items-center gap-1">
                     <Button
                         asChild
                         variant="ghost"
                         size="icon"
                         className="hover:bg-primary/10 transition-smooth size-8"
                     >
-                        <div className="">{/* Do emoji */}</div>
+                        <div>
+                            <EmojiPicker
+                                onChange={(emoji: string) => setValue(`${value}${emoji}`)}
+                            />
+                        </div>
                     </Button>
                 </div>
             </div>
