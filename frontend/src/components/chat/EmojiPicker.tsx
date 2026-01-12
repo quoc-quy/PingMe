@@ -17,7 +17,11 @@ const EmojiPicker = ({ onChange }: EmojiPickerProps) => {
                 <Smile className="size-4" />
             </PopoverTrigger>
 
-            <PopoverContent>
+            <PopoverContent
+                side="right"
+                sideOffset={40}
+                className="bg-transparent border-none drop-shadow-none mb-12"
+            >
                 <Picker
                     theme={isDark ? "dark" : "light"}
                     data={data}
