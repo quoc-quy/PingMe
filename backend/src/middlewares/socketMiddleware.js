@@ -22,7 +22,7 @@ export const socketMiddleware = async (socket, next) => {
         socket.user = user;
         next();
     } catch (error) {
-        console.error("Lỗi khi vẻify JWT trong socketMiddleware:", error);
+        console.error("Lỗi khi verify JWT trong socketMiddleware:", error);
         next(new Error("Unauthorized"));
     }
 };

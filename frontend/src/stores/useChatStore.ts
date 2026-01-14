@@ -3,7 +3,6 @@ import type { ChatState } from "@/types/store";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { useAuthStore } from "./useAuthStore";
-import { fa } from "zod/v4/locales";
 
 export const useChatStore = create<ChatState>()(
     persist(
@@ -113,6 +112,48 @@ export const useChatStore = create<ChatState>()(
                 } catch (error) {
                     console.error("Lỗi xảy ra gửi group message", error);
                 }
+            },
+
+            addMessage: async (message) => {
+                try {
+                    const { user } = useAuthStore.getState();
+                    const { fetchMessages } = get();
+                    message.isOwn = message.senderId === user?._id;
+                    const convoId = message.conversationId;
+
+                    let prevItems = get().messages[convoId]?.items ?? [];
+
+                    if (prevItems.length === 0) {
+                        await fetchMessages(message.conversationId);
+                        prevItems = get().messages[convoId]?.items ?? [];
+                    }
+
+                    set((state) => {
+                        if (prevItems.some((m) => m._id === message._id)) {
+                            return state;
+                        }
+
+                        return {
+                            messages: {
+                                ...state.messages,
+                                [convoId]: {
+                                    hasMore: state.messages[convoId].hasMore,
+                                    items: [...prevItems, message],
+                                    nextCursor: state.messages[convoId].nextCursor ?? undefined,
+                                },
+                            },
+                        };
+                    });
+                } catch (error) {
+                    console.error("Lỗi xảy ra khi thêm message:", error);
+                }
+            },
+            updateConversation: (conversation) => {
+                set((state) => ({
+                    conversations: state.conversations.map((c) =>
+                        c._id === conversation._id ? { ...c, ...conversation } : c
+                    ),
+                }));
             },
         }),
         {
