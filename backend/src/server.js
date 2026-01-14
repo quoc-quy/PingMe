@@ -33,6 +33,6 @@ app.use("/api/conversations", conversationRoute);
 
 connectDB().then(() => {
     server.listen(PORT, () => {
-        console.log("Server bắt đầu trên cổng: " + PORT);
+        console.log(`server bắt đầu trên cổng ${PORT}`);
     });
 });

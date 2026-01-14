@@ -54,6 +54,7 @@ export interface ChatState {
 
 export interface SocketState {
     socket: Socket | null;
+    onlineUsers: string[]; // userIds
     connectSocket: () => void;
     disconnectSocket: () => void;
 }
