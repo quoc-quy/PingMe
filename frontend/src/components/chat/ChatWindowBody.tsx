@@ -1,12 +1,15 @@
 import { useChatStore } from "@/stores/useChatStore";
 import ChatWelcomeScreen from "./ChatWelcomeScreen";
 import MessageItem from "./MessageItem";
+import { useEffect, useState } from "react";
+import { set } from "zod";
 
 const ChatWindowBody = () => {
     const { activeConversationId, conversations, messages: allMessages } = useChatStore();
 
     const messages = allMessages[activeConversationId!]?.items ?? [];
     const selectedConvo = conversations.find((convo) => convo._id === activeConversationId);
+    const [lastMessageStatus, setLastMessageStatus] = useState<"delivered" | "seen">("delivered");
 
     if (!selectedConvo) {
         return <ChatWelcomeScreen />;
@@ -20,7 +23,14 @@ const ChatWindowBody = () => {
         );
     }
 
-    console.log(messages);
+    useEffect(() => {
+        const lastMessage = selectedConvo.lastMessage;
+        if (!lastMessage) return;
+
+        const seenBy = selectedConvo.seenBy || [];
+
+        setLastMessageStatus(seenBy.length > 0 ? "seen" : "delivered");
+    }, [selectedConvo]);
 
     return (
         <div className="p-4 bg-primary-foreground h-full flex flex-col overflow-hidden">
@@ -32,7 +42,7 @@ const ChatWindowBody = () => {
                         index={index}
                         messages={messages}
                         selectedConvo={selectedConvo}
-                        lastMessageStatus="delivered"
+                        lastMessageStatus={lastMessageStatus}
                     />
                 ))}
             </div>

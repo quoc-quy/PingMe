@@ -15,7 +15,7 @@ export interface AuthState {
         password: string,
         email: string,
         firstName: string,
-        lastName: string
+        lastName: string,
     ) => Promise<void>;
 
     signIn: (username: string, password: string) => Promise<void>;
@@ -54,7 +54,8 @@ export interface ChatState {
     addMessage: (message: Message) => Promise<void>;
 
     // update convo
-    updateConversation: (conversation: Conversation) => void;
+    updateConversation: (conversation: unknown) => void;
+    markAsSeen: () => Promise<void>;
 }
 
 export interface SocketState {
