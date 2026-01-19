@@ -18,8 +18,9 @@ export const useAuthStore = create<AuthState>()(
 
             clearState: () => {
                 set({ accessToken: null, user: null, loading: false });
-                localStorage.clear();
                 useChatStore.getState().reset();
+                localStorage.clear();
+                sessionStorage.clear();
             },
 
             signUp: async (username, password, email, firstName, lastName) => {
@@ -38,6 +39,7 @@ export const useAuthStore = create<AuthState>()(
 
             signIn: async (username, password) => {
                 try {
+                    get().clearState();
                     set({ loading: true });
 
                     localStorage.clear();
@@ -108,6 +110,6 @@ export const useAuthStore = create<AuthState>()(
         {
             name: "auth-storage",
             partialize: (state) => ({ user: state.user }), //Chỉ persist lại user
-        }
-    )
+        },
+    ),
 );
