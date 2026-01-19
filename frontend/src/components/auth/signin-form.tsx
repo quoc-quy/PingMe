@@ -65,9 +65,7 @@ export function SigninForm({ className, ...props }: React.ComponentProps<"div">)
                                 />
 
                                 {errors.username && (
-                                    <p className="text-destructive text-sm">
-                                        {errors.username.message}
-                                    </p>
+                                    <p className="error-message">{errors.username.message}</p>
                                 )}
                             </div>
 
@@ -79,9 +77,7 @@ export function SigninForm({ className, ...props }: React.ComponentProps<"div">)
                                 <Input type="password" id="password" {...register("password")} />
 
                                 {errors.password && (
-                                    <p className="text-destructive text-sm">
-                                        {errors.password.message}
-                                    </p>
+                                    <p className="error-message">{errors.password.message}</p>
                                 )}
                             </div>
 

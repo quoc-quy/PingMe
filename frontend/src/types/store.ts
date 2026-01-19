@@ -1,5 +1,5 @@
 import type { Conversation, Message } from "./chat";
-import type { User } from "./user";
+import type { Friend, FriendRequest, User } from "./user";
 import type { Socket } from "socket.io-client";
 
 export interface AuthState {
@@ -63,4 +63,10 @@ export interface SocketState {
     onlineUsers: string[]; // userIds
     connectSocket: () => void;
     disconnectSocket: () => void;
+}
+
+export interface FriendState {
+    loading: boolean;
+    searchByUsername: (username: string) => Promise<User | null>;
+    addFriend: (to: string, message?: string) => Promise<string>;
 }
