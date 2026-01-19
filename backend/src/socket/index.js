@@ -32,10 +32,16 @@ io.on("connection", async (socket) => {
         }
     });
 
+    socket.on("join-conversation", (conversationId) => {
+        socket.join(conversationId);
+    });
+
+    socket.join(user._id.toString());
+
     socket.on("disconnect", () => {
         onlineUsers.delete(user._id);
         io.emit("online-users", Array.from(onlineUsers.keys()));
-        console.log("socket disconnected:", socket.id);
+        // console.log("socket disconnected:", socket.id);
     });
 });
 
