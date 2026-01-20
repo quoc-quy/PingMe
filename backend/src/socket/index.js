@@ -32,6 +32,8 @@ io.on("connection", async (socket) => {
         }
     });
 
+    socket.join(user._id.toString());
+
     socket.on("join-conversation", (conversationId) => {
         socket.join(conversationId);
     });
