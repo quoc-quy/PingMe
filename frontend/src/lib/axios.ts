@@ -1,6 +1,5 @@
 import { useAuthStore } from "@/stores/useAuthStore";
 import axios from "axios";
-import { config } from "zod";
 
 const api = axios.create({
     baseURL: import.meta.env.VITE_API_URL,
@@ -53,7 +52,7 @@ api.interceptors.response.use(
         }
 
         return Promise.reject(error);
-    }
+    },
 );
 
 export default api;
